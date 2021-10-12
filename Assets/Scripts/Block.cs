@@ -2,34 +2,26 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    private float _directionX;
-    private Vector2 targetPos;
-    private float _xIncrement = 1f;
+    private float _fallTime;
+    private float _previousTime;
 
-    [SerializeField]private float _speed;
+    [SerializeField] private float _speed;
     private void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, targetPos, _speed * Time.deltaTime);
-
-        if (_directionX != 0)
+        // UNDONE
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            targetPos =  new Vector2(_directionX + _xIncrement, 0);
-            transform.position = targetPos;
+            transform.position += Vector3.left;
         }
-    }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            transform.position += Vector3.right;
+        }
 
-    private void GetDirectionX(float direction)
-    {
-        _directionX = direction;
-    }
-
-    private void OnEnable()
-    {
-        BlockInput.OnMove += GetDirectionX;
-    }
-
-    private void OnDisable()
-    {
-        BlockInput.OnMove -= GetDirectionX;
+        if (Time.time - _previousTime > (Input.GetKey(KeyCode.S) ? _fallTime / 10 : _fallTime))
+        {
+            transform.position += Vector3.down;
+            _previousTime = Time.time;
+        }
     }
 }
